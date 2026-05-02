@@ -67,7 +67,6 @@ audit-journal                      # audit history
 | 110 | gh-runner | 192.168.1.60 | 2222 | GitHub Actions self-hosted runner |
 | 203 | databases | 192.168.1.58 | 2222 | PostgreSQL, Redis, Qdrant + agents |
 | 204 | services | 192.168.1.59 | 2222 | Traefik, n8n, Vault, AdGuard, Homarr, ntfy, Beszel Hub, Uptime Kuma, Tugtainer, Dozzle, Cloudflared |
-| 205 | claude-monitor | 192.168.1.61 | 2222 | Claude Code Headless + Monitor webapp |
 | **505** | **dev-projects** | **192.168.1.35** | **2222** | **This host — all dev + AI auditor** |
 
 ### Network Architecture
@@ -75,11 +74,11 @@ audit-journal                      # audit history
 ```
 Internet → Cloudflared (204) → Traefik (204) → Services
                                     │
-         ┌──────────────────────────┼──────────────────┐
-         ▼                          ▼                   ▼
-    LXC 203 (DB)           LXC 204 (Services)    LXC 205 (Monitor)
-    PostgreSQL              Traefik, n8n           Claude Headless
-    Redis, Qdrant           Vault, AdGuard         Monitor webapp
+         ┌──────────────────────────┴──────────────────┐
+         ▼                                              ▼
+    LXC 203 (DB)                              LXC 204 (Services)
+    PostgreSQL                                 Traefik, n8n
+    Redis, Qdrant                              Vault, AdGuard
 ```
 
 ### Services URLs
@@ -96,7 +95,6 @@ Internet → Cloudflared (204) → Traefik (204) → Services
 | ntfy | `https://ntfy.voytek-homelab.com` |
 | Vault | `https://vault.voytek-homelab.com` |
 | pgAdmin | `https://pgadmin.voytek-homelab.com` |
-| Claude Monitor | `https://claude-monitor.voytek-homelab.com` |
 
 ---
 
@@ -107,7 +105,6 @@ Pre-configured via `~/.ssh/config`:
 ```bash
 ssh databases         # 192.168.1.58 (PostgreSQL, Redis, Qdrant)
 ssh services          # 192.168.1.59 (Traefik, n8n, Vault, etc.)
-ssh claude-monitor    # 192.168.1.61 (Claude Code Headless)
 ssh pve0              # 192.168.1.7 (Proxmox host)
 ```
 

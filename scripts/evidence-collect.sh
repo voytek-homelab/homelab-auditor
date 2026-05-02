@@ -13,7 +13,7 @@ LOG_PREFIX="[$(date +%Y-%m-%dT%H:%M:%S)]"
 TODAY=$(date +%Y-%m-%d)
 
 # Infrastructure targets (SSH port 2222)
-TARGETS="databases:192.168.1.58 services:192.168.1.59 claude-monitor:192.168.1.61"
+TARGETS="databases:192.168.1.58 services:192.168.1.59"
 DOCKER_HOSTS="databases:192.168.1.58 services:192.168.1.59"
 SSH_OPTS="-o ConnectTimeout=10 -o StrictHostKeyChecking=no -p 2222"
 
