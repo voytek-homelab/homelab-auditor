@@ -69,7 +69,6 @@ audit-journal                      # audit history
 | 204 | services | 192.168.1.59 | 2222 | Traefik, n8n, Vault, AdGuard, Homarr, ntfy, Beszel Hub, Uptime Kuma, Tugtainer, Dozzle, Cloudflared |
 | 205 | claude-monitor | 192.168.1.61 | 2222 | Claude Code Headless + Monitor webapp |
 | **505** | **dev-projects** | **192.168.1.35** | **2222** | **This host — all dev + AI auditor** |
-| 500 | dev-hq | 192.168.1.30 | 2222 | HQ IaC (on-demand) |
 
 ### Network Architecture
 
@@ -258,7 +257,7 @@ Use `notion-create-pages` with `database_id` (not `parent.page_id`):
 
 **Property values** (must match exactly):
 - **Severity:** `S1-krytyczny`, `S2-wysoki`, `S3-średni`, `S4-niski`
-- **Host:** `databases`, `services`, `dev-hq`, `gh-runner`, `pve0`
+- **Host:** `databases`, `services`, `gh-runner`, `pve0`
 - **Obszar:** `Docker`, `SSH`, `Firewall`, `TLS/SSL`, `Backup`, `Monitoring`, `Uprawnienia`, `Sieć`, `Zasoby`, `Aktualizacje`, `Logi`, `Secrets`
 - **Status:** `Nowy` (always for new findings)
 

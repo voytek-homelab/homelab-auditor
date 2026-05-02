@@ -168,7 +168,7 @@ Dla każdego findinga użyj `notion-create-pages` z tymi properties:
 | Tytuł | Krótki, konkretny opis problemu (po polsku) |
 | Severity | `S1-krytyczny` / `S2-wysoki` / `S3-średni` / `S4-niski` |
 | Status | `Nowy` |
-| Host | Nazwa hosta: databases, services, dev-hq, etc. |
+| Host | Nazwa hosta: databases, services, gh-runner, etc. |
 | Obszar | Kategoria: Docker, SSH, Firewall, TLS/SSL, Backup, Monitoring, Uprawnienia, Sieć, Zasoby, Aktualizacje, Logi, Secrets |
 | date:Data:start | `YYYY-MM-DD` (dzisiejsza data) |
 | Opis | 1-2 zdania: co jest nie tak i jaki jest wpływ. Widoczne w tabeli bez otwierania strony. |
