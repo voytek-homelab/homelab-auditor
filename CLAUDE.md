@@ -1,6 +1,28 @@
-# CLAUDE.md - Homelab AI Auditor (LXC 504)
+# CLAUDE.md - Homelab AI Auditor (LXC 505)
 
 AI-powered infrastructure auditor for homelab. Combines deterministic evidence collection with exploratory AI auditing.
+
+## Threat Model — `solo_homelab` (mandatory calibration)
+
+This is a **single-owner homelab**, not a multi-tenant or corporate environment. Default enterprise severity ratings inflate findings that don't apply here. **Every finding MUST go through severity calibration BEFORE being written to disk** — see `.agent/rules/002-threat-model.md` for the matrix.
+
+Quick mental model:
+- **LAN is owner-trusted** (no co-workers, no contractors, no shared tenants)
+- **Only semi-trusted endpoint**: LXC 110 `gh-runner` (executes external GitHub workflow code)
+- **External attack surface**: only via Cloudflare tunnel (raw IP not exposed)
+- **DR/HA**: solo tolerates SPOF — accept-with-documentation > over-engineer
+
+Bias: when uncertain, **downgrade then escalate via override conditions** (public CF exposure, secrets handling, gh-runner reachability, active exploitation). Generic enterprise checklist items without specific homelab impact go to INFO bucket, not Notion.
+
+Findings that ARE valuable here:
+1. System violates its own design intent (Constitution / engineering-conventions / own rules)
+2. Concrete unauthorized access vector (unknown SSH keys, leaked tokens)
+3. Self-reflection on monitoring/audit blind spots (e.g. notification layer broken)
+
+Findings that are NOT valuable here:
+- "Best practice gap" without specific homelab impact
+- Generic hardening checklist items (sysctl, AppArmor enforce, DNSSEC for LAN-only)
+- Repeating the same finding across audits without escalation
 
 ## This Host (LXC 505 - dev-projects)
 
@@ -56,18 +78,19 @@ audit-journal                      # audit history
 
 | Node | IP | Role |
 |------|-----|------|
-| **PVE0** | 192.168.1.7 | Main — LXC 203-205, 500-506 |
-| **PVE1** | 192.168.1.6 | Websites (WordPress, Strapi) |
-| **PVE2** | 192.168.1.18 | Proxmox Backup Server |
+| **PVE0** | 192.168.1.7 | Main — LXC 110, 203, 204, 505; VMs 100 (haos), 106 (nextcloud), 300 (windows-stopped), 301 (ubuntu-desktop) |
+| **PVE1** | 192.168.1.6 | Websites — LXC 108 greenovate, 109 strapi-cms, 112 p2rev, 113 drezewski |
+| **PVE2** | 192.168.1.5 | Immich (LXC 103) + AdGuard secondary (LXC 104, native) |
+| **PBS**  | 192.168.1.18 | Proxmox Backup Server (NOT cluster member) |
 
 ### LXC Containers (PVE0)
 
 | LXC | Name | IP | SSH | Services |
 |-----|------|-----|-----|----------|
-| 110 | gh-runner | 192.168.1.60 | 2222 | GitHub Actions self-hosted runner |
-| 203 | databases | 192.168.1.58 | 2222 | PostgreSQL, Redis, Qdrant + agents |
-| 204 | services | 192.168.1.59 | 2222 | Traefik, n8n, Vault, AdGuard, Homarr, ntfy, Beszel Hub, Uptime Kuma, Tugtainer, Dozzle, Cloudflared |
-| **505** | **dev-projects** | **192.168.1.35** | **2222** | **This host — all dev + AI auditor** |
+| 110 | gh-runner | 192.168.1.60 | 2222 | GitHub Actions self-hosted runner — **semi-trusted** (executes external workflow code) |
+| 203 | databases | 192.168.1.58 | 2222 | TimescaleDB, Qdrant, Memgraph, SPLADE + agents (NOTE: Redis NOT here — per-project on CT505) |
+| 204 | services | 192.168.1.59 | 2222 | Traefik, n8n, Vault, AdGuard (Docker), Homarr, ntfy, Beszel Hub, Uptime Kuma, Tugtainer, Dozzle, Cloudflared, pgAdmin, Searxng |
+| **505** | **dev-projects** | **192.168.1.35** | **2222** | **This host — all dev + AI auditor + per-project Redis (aome-redis, sp-redis)** |
 
 ### Network Architecture
 

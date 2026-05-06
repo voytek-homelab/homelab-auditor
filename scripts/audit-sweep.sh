@@ -44,10 +44,13 @@ Follow the audit orchestrator protocol:
 3. Identify coverage gaps (areas never audited or oldest)
 4. Select 2-3 areas to audit this session
 5. Execute audits using SSH to infrastructure hosts
-6. Write findings to ${AUDITOR_DIR}/findings/
-7. Write journal entry to ${AUDITOR_DIR}/journal/
-8. Update coverage map and backlog
-9. If CRITICAL findings: send ntfy alert"
+6. Apply threat model calibration (.agent/rules/002-threat-model.md) to EVERY finding before writing
+7. Write findings to ${AUDITOR_DIR}/findings/ (or info/ for INFO-calibrated)
+8. Write journal entry to ${AUDITOR_DIR}/journal/
+9. Update coverage map and backlog
+10. If CRITICAL findings AND not downgraded: send ntfy alert
+
+THREAT MODEL CONTEXT (mandatory): This is solo_homelab. Single owner, LAN trusted, only LXC 110 (gh-runner) is semi-trusted (runs external GH workflow code). External attack surface only via Cloudflare tunnel. Apply severity calibration matrix per .agent/rules/002-threat-model.md BEFORE writing any finding. Generic enterprise checklist items without specific homelab impact go to INFO bucket, not Notion."
 
 if [ -n "$FOCUS" ]; then
     PROMPT="${PROMPT}
